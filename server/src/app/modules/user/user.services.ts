@@ -36,8 +36,22 @@ const getUserById = async (id: string) => {
   return result;
 };
 
+const updateUser = async (id: string, user: User) => {
+  const result = await prismaC.user.update({
+    where: {
+      id,
+    },
+    data: user,
+  });
+  if (!result) {
+    throw new Error("User not updated");
+  }
+  return result;
+};
+
 export const userService = {
   createUser,
   getUsers,
   getUserById,
+  updateUser,
 };

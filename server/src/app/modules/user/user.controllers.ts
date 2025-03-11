@@ -28,8 +28,18 @@ const getUserById = catchAsync(async (req, res) => {
   });
 });
 
+const updateUser = catchAsync(async (req, res) => {
+  const user = await userService.updateUser(req.params.id, req.body);
+  res.status(200).json({
+    success: true,
+    message: "successfully updated user",
+    data: user,
+  });
+});
+
 export const userController = {
   createUser,
   getUsers,
   getUserById,
+  updateUser,
 };
