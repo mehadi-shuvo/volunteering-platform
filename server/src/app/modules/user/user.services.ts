@@ -21,7 +21,23 @@ const getUsers = async () => {
   return await prismaC.user.findMany();
 };
 
+const getUserById = async (id: string) => {
+  const result = await prismaC.user.findUnique({
+    where: {
+      id,
+    },
+    omit: {
+      password: true,
+    },
+  });
+  if (!result) {
+    throw new Error("User not found");
+  }
+  return result;
+};
+
 export const userService = {
   createUser,
   getUsers,
+  getUserById,
 };
