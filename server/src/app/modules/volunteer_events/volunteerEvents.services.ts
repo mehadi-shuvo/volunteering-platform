@@ -1,4 +1,4 @@
-import { Events, Prisma } from "@prisma/client";
+import { Events, Prisma, VolunteerType } from "@prisma/client";
 import prismaC from "../../../utils/prismaClient";
 
 const createVolunteerEvent = async (volunteerEvent: Events) => {
@@ -53,7 +53,54 @@ const getAllEvents = async (filters: {
   return result;
 };
 
+const joinEvent = async (eventId: string, userId: string) => {
+  const result = await prismaC.$transaction(async (tc) => {
+    const isExistingAttendee = await tc.events.findFirst({
+      where: {
+        id: eventId,
+        attendees: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    if (isExistingAttendee) {
+      throw new Error("User is already an attendee");
+    }
+
+    const event = await tc.events.update({
+      where: {
+        id: eventId,
+      },
+      data: {
+        attendees: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    await tc.history.create({
+      data: {
+        title: event.title,
+        type: VolunteerType.VOLUNTEER,
+        date: event.date,
+        user_id: userId,
+        event_id: eventId,
+      },
+    });
+
+    return event;
+  });
+
+  return result;
+};
+
 export const volunteerEventsServices = {
   createVolunteerEvent,
   getAllEvents,
+  joinEvent,
 };

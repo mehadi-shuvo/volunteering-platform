@@ -27,7 +27,18 @@ const getAllEvents = catchAsync(async (req, res) => {
   });
 });
 
+const joinEvent = catchAsync(async (req, res) => {
+  const { eventId, userId } = req.body;
+  const result = await volunteerEventsServices.joinEvent(eventId, userId);
+  res.status(200).json({
+    success: true,
+    message: "successfully joined event",
+    data: result,
+  });
+});
+
 export const volunteerEventsControllers = {
   createVolunteerEvent,
   getAllEvents,
+  joinEvent,
 };
