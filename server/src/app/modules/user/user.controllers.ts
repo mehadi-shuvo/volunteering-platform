@@ -1,3 +1,4 @@
+import { access } from "fs";
 import catchAsync from "../../../utils/catchAsync";
 import { userService } from "./user.services";
 
@@ -37,9 +38,39 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+const login = catchAsync(async (req, res) => {
+  const user = await userService.login(req.body.email, req.body.password);
+  const { refreshToken } = user;
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+  });
+  res.status(200).json({
+    success: true,
+    message: "successfully logged in",
+    data: {
+      user: user.user,
+      accessToken: user.accessToken,
+    },
+  });
+});
+
+const refreshTokenAPI = catchAsync(async (req, res) => {
+  const { refreshToken } = req.cookies;
+  const result = await userService.refreshTokenAIP(refreshToken);
+
+  res.status(200).json({
+    success: true,
+    message: "successfully token generated",
+    data: result,
+  });
+});
+
 export const userController = {
   createUser,
   getUsers,
   getUserById,
   updateUser,
+  login,
+  refreshTokenAPI,
 };

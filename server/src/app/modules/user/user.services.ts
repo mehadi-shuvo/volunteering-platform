@@ -1,6 +1,8 @@
 import { User } from "@prisma/client";
 import prismaC from "../../../utils/prismaClient";
 import bcrypt from "bcryptjs";
+import { log } from "console";
+import { jwtHelper } from "../../../utils/jwtHelper";
 
 const createUser = async (user: User) => {
   const { password } = user;
@@ -49,9 +51,77 @@ const updateUser = async (id: string, user: User) => {
   return result;
 };
 
+const login = async (email: string, password: string) => {
+  const user = await prismaC.user.findUnique({
+    where: {
+      email,
+    },
+    omit: {
+      password: false,
+    },
+  });
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const isMatch = bcrypt.compareSync(password, user?.password);
+  if (!isMatch) {
+    throw new Error("Invalid password");
+  }
+
+  const accessToken = jwtHelper.generateToken(
+    { email: user.email, name: user.name },
+    process.env.ACCESS_TOKEN_SECRET as string,
+    "1h"
+  );
+
+  const refreshToken = jwtHelper.generateToken(
+    { email: user.email, name: user.name },
+    process.env.REFRESH_TOKEN_SECRET as string,
+    "7d"
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+    user: {
+      ...user,
+      password: undefined,
+    },
+  };
+};
+
+const refreshTokenAIP = async (token: string) => {
+  let decodedData;
+  try {
+    decodedData = jwtHelper.tokenVerify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string
+    );
+  } catch (err) {
+    throw new Error("You are not authorized!");
+  }
+
+  const user = await prismaC.user.findUniqueOrThrow({
+    where: {
+      email: decodedData.email,
+    },
+  });
+  const accessToken = jwtHelper.generateToken(
+    { email: user.email, name: user.name },
+    process.env.ACCESS_TOKEN_SECRET as string,
+    "1h"
+  );
+
+  return {
+    accessToken,
+  };
+};
+
 export const userService = {
   createUser,
   getUsers,
   getUserById,
   updateUser,
+  login,
+  refreshTokenAIP,
 };
