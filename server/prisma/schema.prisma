@@ -13,15 +13,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum VolunteerType {
+  VOLUNTEER
+  ORGANIZER
+}
 
 model User {
-  id      String   @id @default(uuid())
-  email   String   @unique
-  name    String
-  password String
-  skills  String[]
-  causes_supported String[] @default([])
-  volunteer_history String[] @default([])
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id               String        @id @default(uuid())
+  email            String        @unique
+  name             String
+  password         String
+  skills           String[]
+  causes_supported String[]      @default([])
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+  organized_events Events[]      @relation("OrganizedEvents") // Events organized by the user
+  attended_events  Events[]      @relation("AttendedEvents")  // Events the user has attended
+  history          History[]     // History of events the user has participated in or organized
+}
+
+model Events {
+  id             String        @id @default(uuid())
+  title          String
+  description    String
+  category       String
+  organizer_id   String
+  organizer      User          @relation("OrganizedEvents", fields: [organizer_id], references: [id])
+  attendees      User[]        @relation("AttendedEvents") // Many users can attend an event
+  location       String
+  date           DateTime
+  time           DateTime
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+  history        History[]     // History records for this event
+}
+
+model History {
+  id          String        @id @default(uuid())
+  title       String
+  type        VolunteerType
+  date        DateTime
+  user_id     String
+  user        User          @relation(fields: [user_id], references: [id])
+  event_id    String
+  event       Events        @relation(fields: [event_id], references: [id])
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
 }
