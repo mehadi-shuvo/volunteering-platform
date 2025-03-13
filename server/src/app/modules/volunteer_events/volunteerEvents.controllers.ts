@@ -16,6 +16,18 @@ const createVolunteerEvent = catchAsync(async (req, res) => {
   });
 });
 
+const getAllEvents = catchAsync(async (req, res) => {
+  const filters = req.query;
+
+  const events = await volunteerEventsServices.getAllEvents(filters);
+  res.status(200).json({
+    success: true,
+    message: "successfully retrieved events",
+    data: events,
+  });
+});
+
 export const volunteerEventsControllers = {
   createVolunteerEvent,
+  getAllEvents,
 };
