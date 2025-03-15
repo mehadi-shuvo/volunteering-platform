@@ -78,7 +78,7 @@ const Registration = () => {
         {/* Login Link */}
         <p className="text-center mt-4 text-gray-600">
           Already have an account?{" "}
-          <a href="/login" className="primary-text hover:underline">
+          <a href="/auth/login" className="primary-text hover:underline">
             Login here
           </a>
         </p>
