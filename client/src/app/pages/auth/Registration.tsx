@@ -1,21 +1,47 @@
+import { useForm, SubmitHandler } from "react-hook-form";
+import { registrationApi } from "../../../apis/auth/registrationApi";
+
+// Rename the interface to avoid conflict with the browser's FormData
+interface RegistrationFormData {
+  email: string;
+  name: string;
+  password: string;
+  skills: string; // Optional field
+  causes_supported: string; // Optional field
+}
+
 const Registration = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegistrationFormData>(); // Use the renamed interface
+
+  // Use SubmitHandler<RegistrationFormData> to type the onSubmit function
+  const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
+    registrationApi(data);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center primary-text mb-6">
           Register
         </h2>
-        {/* {error && <p className="text-red-500 text-center mb-4">{error}</p>} */}
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           {/* Email */}
           <div className="mb-4">
             <label className="block text-gray-700">Email</label>
             <input
               type="email"
-              name="email"
+              {...register("email", { required: "Email is required" })}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-bg"
-              required
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message?.toString()}
+              </p>
+            )}
           </div>
 
           {/* Name */}
@@ -23,10 +49,14 @@ const Registration = () => {
             <label className="block text-gray-700">Name</label>
             <input
               type="text"
-              name="name"
+              {...register("name", { required: "Name is required" })}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-bg"
-              required
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.name.message?.toString()}
+              </p>
+            )}
           </div>
 
           {/* Password */}
@@ -34,10 +64,14 @@ const Registration = () => {
             <label className="block text-gray-700">Password</label>
             <input
               type="password"
-              name="password"
+              {...register("password", { required: "Password is required" })}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-bg"
-              required
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message?.toString()}
+              </p>
+            )}
           </div>
 
           {/* Skills */}
@@ -47,7 +81,7 @@ const Registration = () => {
             </label>
             <input
               type="text"
-              name="skills"
+              {...register("skills", { required: "Skills are required" })}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-bg"
               placeholder="e.g., Teaching, Cooking, Coding"
             />
@@ -60,7 +94,9 @@ const Registration = () => {
             </label>
             <input
               type="text"
-              name="causes_supported"
+              {...register("causes_supported", {
+                required: "causes are required",
+              })}
               className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-bg"
               placeholder="e.g., Environment, Education, Healthcare"
             />
