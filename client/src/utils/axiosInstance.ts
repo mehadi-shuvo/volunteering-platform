@@ -2,8 +2,10 @@ import axios from "axios";
 import { store } from "../redux/store";
 import { logout, setAccessToken } from "../redux/authSlice";
 
+export const baseURL = "http://localhost:3000/api";
+
 const API = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL,
   withCredentials: true, // Ensures cookies (refresh token) are sent
 });
 
