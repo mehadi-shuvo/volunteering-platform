@@ -4,15 +4,11 @@ import { TUser } from "../utils/types/types";
 interface AuthState {
   user: TUser | null;
   accessToken: string | null;
-  refreshToken: string | null;
-  isAuthenticated: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
-  accessToken: null,
-  refreshToken: null,
-  isAuthenticated: false,
+  accessToken: localStorage.getItem("accessToken") || null,
 };
 
 const authSlice = createSlice({
@@ -24,23 +20,24 @@ const authSlice = createSlice({
       action: PayloadAction<{
         user: TUser;
         accessToken: string;
-        refreshToken: string;
       }>
     ) => {
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
-      state.isAuthenticated = true;
+      localStorage.setItem("accessToken", action.payload.accessToken);
     },
     logout: (state) => {
       state.user = null;
       state.accessToken = null;
-      state.refreshToken = null;
-      state.isAuthenticated = false;
+      localStorage.removeItem("accessToken");
+    },
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload;
+      localStorage.setItem("accessToken", action.payload);
     },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, setAccessToken } = authSlice.actions;
 
 export default authSlice.reducer;
