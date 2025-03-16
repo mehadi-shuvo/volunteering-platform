@@ -12,7 +12,6 @@ export const loginApi =
         email,
         password,
       });
-
       dispatch(
         setCredentials({
           user: res.data?.data.user,
