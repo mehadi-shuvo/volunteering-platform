@@ -1,53 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getEventsApi } from "../../../apis/auth/eventsApi";
+import { TUser } from "../../../utils/types/types";
+
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  category: string;
+  attendees: TUser[];
+  organizer_id: string;
+}
 
 const Events = () => {
-  // Dummy data for events
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "Community Cleanup Drive",
-      description:
-        "Join us to clean up the local park and make our community greener!",
-      date: "2023-11-15",
-      time: "10:00 AM",
-      location: "Central Park, New York",
-      category: "Environment",
-      attendees: 25,
-    },
-    {
-      id: 2,
-      title: "Food Distribution for the Homeless",
-      description:
-        "Help distribute food to those in need at the downtown shelter.",
-      date: "2023-11-20",
-      time: "2:00 PM",
-      location: "Downtown Shelter, Chicago",
-      category: "Social Welfare",
-      attendees: 15,
-    },
-    {
-      id: 3,
-      title: "Weekly Tutoring Session",
-      description:
-        "Volunteer to tutor kids in math and science every Saturday.",
-      date: "2023-11-18",
-      time: "9:00 AM",
-      location: "Community Center, Los Angeles",
-      category: "Education",
-      attendees: 10,
-    },
-  ]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
-  const [showEventForm, setShowEventForm] = useState(false);
-  console.log(showEventForm);
+  // Fetch events with filters
+  const fetchEvents = async () => {
+    try {
+      const filters = {
+        category: selectedCategory,
+        location: selectedLocation,
+        date: selectedDate,
+      };
+      const data = await getEventsApi(filters);
+      setEvents(data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
-  const handleJoinEvent = (id: number) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === id ? { ...event, attendees: event.attendees + 1 } : event
-      )
-    );
-    alert("You have successfully joined the event!");
+  // Fetch events when filters change
+  useEffect(() => {
+    fetchEvents();
+  }, [selectedCategory, selectedLocation, selectedDate]);
+
+  // Handle search locally (frontend filtering)
+  const filteredEvents = events.filter((event) =>
+    event.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleJoinEvent = (id: string) => {
+    console.log({ join: id });
+
+    // setEvents((prevEvents) =>
+    //   prevEvents.map((event) =>
+    //     event.id === id ? { ...event, attendees: event.attendees + 1 } : event
+    //   )
+    // );
+    // alert("You have successfully joined the event!");
   };
 
   return (
@@ -62,10 +69,7 @@ const Events = () => {
             Find upcoming events, register with one click, and make a difference
             in your community!
           </p>
-          <button
-            onClick={() => setShowEventForm(true)} // Open modal or redirect
-            className="secondary-bg mt-4 px-6 py-2 rounded-lg text-white font-bold hover:bg-yellow-500 transition-all"
-          >
+          <button className="secondary-bg mt-4 px-6 py-2 rounded-lg text-white font-bold hover:bg-yellow-500 transition-all">
             Create Event
           </button>
         </div>
@@ -75,25 +79,41 @@ const Events = () => {
           <input
             type="text"
             placeholder="Search events..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-bg"
           />
-          <select className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-bg">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-bg"
+          >
             <option value="">All Categories</option>
             <option value="Environment">Environment</option>
             <option value="Social Welfare">Social Welfare</option>
             <option value="Education">Education</option>
           </select>
-          <select className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-bg">
+          <select
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-bg"
+          >
             <option value="">All Locations</option>
             <option value="New York">New York</option>
             <option value="Chicago">Chicago</option>
             <option value="Los Angeles">Los Angeles</option>
           </select>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-bg"
+          />
         </div>
 
         {/* Event Listing */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map((event) => (
+          {filteredEvents.map((event) => (
             <div
               key={event.id}
               className="primary-bg text-white rounded-lg shadow-md p-6 hover:shadow-lg transition-all"
@@ -162,11 +182,11 @@ const Events = () => {
                       d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
                     />
                   </svg>
-                  <span className="">{event.attendees} Attendees</span>
+                  <span className="">{event.attendees.length} Attendees</span>
                 </div>
               </div>
               <button
-                onClick={() => handleJoinEvent(event.id)}
+                onClick={() => handleJoinEvent("dsdfdfdf")}
                 className="secondary-bg w-full py-2 rounded-lg text-white font-bold hover:bg-yellow-500 transition-all"
               >
                 Join Event
