@@ -1,12 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TUser } from "../utils/types/types";
+import { TAuthState, TUser } from "../utils/types/types";
 
-interface AuthState {
-  user: TUser | null;
-  accessToken: string | null;
-}
-
-const initialState: AuthState = {
+const initialState: TAuthState = {
   user: null,
   accessToken: localStorage.getItem("accessToken") || null,
 };

@@ -71,13 +71,13 @@ const login = async (email: string, password: string) => {
   const accessToken = jwtHelper.generateToken(
     { email: user.email, name: user.name },
     process.env.ACCESS_TOKEN_SECRET as string,
-    "1h"
+    100000
   );
 
   const refreshToken = jwtHelper.generateToken(
     { email: user.email, name: user.name },
     process.env.REFRESH_TOKEN_SECRET as string,
-    "7d"
+    300000
   );
 
   return {

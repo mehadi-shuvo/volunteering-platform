@@ -55,8 +55,22 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+const logout = catchAsync(async (req, res) => {
+  res.clearCookie("refreshToken");
+  res.status(200).json({
+    success: true,
+    message: "successfully logged out!",
+  });
+});
+
 const refreshTokenAPI = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
+  if (!refreshToken) {
+    res.status(401).json({
+      success: false,
+      message: "Refresh token is missing",
+    });
+  }
   const result = await userService.refreshTokenAIP(refreshToken);
 
   res.status(200).json({
@@ -72,5 +86,6 @@ export const userController = {
   getUserById,
   updateUser,
   login,
+  logout,
   refreshTokenAPI,
 };

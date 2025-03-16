@@ -1,6 +1,14 @@
-import { Link, Outlet } from "react-router"; // Corrected import
+import { Link, Outlet } from "react-router";
+import { useDispatch } from "react-redux";
+import { logoutApi } from "../../apis/auth/logoutApi";
+import { AppDispatch } from "../../redux/store";
 
 const MainLayout = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const handleLogout = async () => {
+    await dispatch(logoutApi());
+    console.log(1);
+  };
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -137,7 +145,10 @@ const MainLayout = () => {
 
           {/* Logout Button */}
           <div className="w-full">
-            <button className="secondary-bg w-full py-3 text-xl font-bold cursor-pointer hover:bg-yellow-500 transition-all flex items-center justify-center gap-2">
+            <button
+              onClick={() => handleLogout()}
+              className="secondary-bg w-full py-3 text-xl font-bold cursor-pointer hover:bg-yellow-500 transition-all flex items-center justify-center gap-2"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
