@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { loginApi } from "../../../apis/auth/loginApi";
+import { useNavigate } from "react-router";
 
 interface LoginFormData {
   email: string;
@@ -9,6 +10,7 @@ interface LoginFormData {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -18,7 +20,9 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
     const res = await dispatch(loginApi(data));
-    console.log(res);
+    if (res?.user) {
+      navigate("/");
+    }
   };
 
   return (

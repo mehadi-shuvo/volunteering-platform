@@ -5,6 +5,7 @@ import Profile from "../pages/profile/Profile";
 import AuthLayout from "../layout/AuthLayout";
 import Registration from "../pages/auth/Registration";
 import Login from "../pages/auth/Login";
+import PrivateRoute from "../layout/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -14,11 +15,19 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Profile />,
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/events",
-        element: <Events />,
+        element: (
+          <PrivateRoute>
+            <Events />
+          </PrivateRoute>
+        ),
       },
     ],
   },

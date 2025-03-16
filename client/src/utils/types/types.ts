@@ -13,3 +13,21 @@ export type TUser = {
   skills: string[];
   causes_supported: string[];
 };
+
+export type TAuthState = {
+  user: TUser | null;
+  accessToken: string | null;
+};
+
+export type LoginResponse = {
+  data: {
+    user: TUser;
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export type LoginApiParams = {
+  email: string;
+  password: string;
+};

@@ -1,19 +1,6 @@
 import { setCredentials } from "../../redux/authSlice";
 import API from "../../utils/axiosInstance";
-import { TUser } from "../../utils/types/types";
-
-interface LoginResponse {
-  data: {
-    user: TUser;
-    accessToken: string;
-    refreshToken: string;
-  };
-}
-
-interface LoginApiParams {
-  email: string;
-  password: string;
-}
+import { LoginApiParams, LoginResponse } from "../../utils/types/types";
 
 import { AppDispatch } from "../../redux/store";
 
@@ -25,10 +12,6 @@ export const loginApi =
         email,
         password,
       });
-      console.log({
-        user: res.data?.data.user,
-        accessToken: res.data?.data.accessToken,
-      });
 
       dispatch(
         setCredentials({
@@ -36,6 +19,7 @@ export const loginApi =
           accessToken: res.data?.data.accessToken,
         })
       );
+      return res.data.data;
     } catch (error) {
       console.error("Login failed", error);
     }
