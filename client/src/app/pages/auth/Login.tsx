@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
 import { loginApi } from "../../../apis/auth/loginApi";
-import { setCredentials } from "../../../redux/authSlice";
 
 interface LoginFormData {
   email: string;
@@ -14,19 +14,11 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>();
-
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
-    try {
-      const response = await loginApi(data);
-      const { user, accessToken } = response.data;
-
-      // Dispatch the setCredentials action
-      dispatch(setCredentials({ user, accessToken, refreshToken: "" })); // refreshToken is handled via cookies
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+    const res = await dispatch(loginApi(data));
+    console.log(res);
   };
 
   return (
