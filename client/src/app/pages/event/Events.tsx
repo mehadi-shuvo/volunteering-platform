@@ -48,13 +48,6 @@ const Events = () => {
 
   const handleJoinEvent = (id: string) => {
     console.log({ join: id });
-
-    // setEvents((prevEvents) =>
-    //   prevEvents.map((event) =>
-    //     event.id === id ? { ...event, attendees: event.attendees + 1 } : event
-    //   )
-    // );
-    // alert("You have successfully joined the event!");
   };
 
   return (

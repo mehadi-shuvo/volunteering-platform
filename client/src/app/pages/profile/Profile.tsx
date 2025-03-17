@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { TUser } from "../../../utils/types/types";
 
 const Profile = () => {
-  const user = useSelector(
-    (state: { auth: { user: TUser } }) => state.auth.user
-  );
+  const res = localStorage.getItem("user");
+  const user: TUser = res ? JSON.parse(res) : null;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedProfile, setEditedProfile] = useState({ ...user });
