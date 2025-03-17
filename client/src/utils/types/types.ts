@@ -31,3 +31,15 @@ export type LoginApiParams = {
   email: string;
   password: string;
 };
+
+export type TEvent = {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  category: string;
+  attendees: TUser[];
+  organizer_id: string;
+};
