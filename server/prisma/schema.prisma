@@ -41,8 +41,8 @@ model Events {
   organizer      User          @relation("OrganizedEvents", fields: [organizer_id], references: [id])
   attendees      User[]        @relation("AttendedEvents") // Many users can attend an event
   location       String
-  date           DateTime
-  time           DateTime
+  date           String
+  time           String
   created_at     DateTime      @default(now())
   updated_at     DateTime      @updatedAt
   history        History[]     // History records for this event

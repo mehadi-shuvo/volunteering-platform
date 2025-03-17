@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { getEventsApi } from "../../../apis/auth/eventsApi";
 import EventCard from "../../../components/EventCard";
-import { TEvent } from "../../../utils/types/types";
+import { TEvent, TUser } from "../../../utils/types/types";
 import CreateEventModal from "../../../components/CreateEventModal";
 
 const Events = () => {
+  const res = localStorage.getItem("user");
+  const user: TUser = res ? JSON.parse(res) : "";
   const [events, setEvents] = useState<TEvent[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -109,7 +111,7 @@ const Events = () => {
       {/* Modal */}
 
       <dialog id="my_modal_3" className="modal">
-        <CreateEventModal userId="opp" />
+        <CreateEventModal userId={user?.id} />
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>

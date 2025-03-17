@@ -16,7 +16,7 @@ const createVolunteerEvent = async (volunteerEvent: Events) => {
 // Get all events with optional filters
 const getAllEvents = async (filters: {
   category?: string;
-  date?: Date;
+  date?: string;
   location?: string;
 }) => {
   const { category, date, location } = filters;

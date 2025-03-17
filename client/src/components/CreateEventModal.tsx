@@ -1,5 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TEvent } from "../utils/types/types";
+import { createEventApi } from "../apis/event/createEventApi";
 
 interface CreateEventModalProps {
   userId: string;
@@ -12,10 +13,9 @@ const CreateEventModal = ({ userId }: CreateEventModalProps) => {
     formState: { errors },
   } = useForm<TEvent>();
 
-  const onSubmit: SubmitHandler<TEvent> = (data) => {
-    console.log({ data, userId });
-    // Here you would typically make an API call to create the event
-    // setIsModalOpen(false); // Close the modal after submission
+  const onSubmit: SubmitHandler<TEvent> = async (data) => {
+    data.organizer_id = userId;
+    await createEventApi(data);
   };
 
   return (
