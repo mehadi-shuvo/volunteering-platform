@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { TUser } from "../../../utils/types/types";
+import { updateUserApi } from "../../../apis/user/updateUserApi";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
 
 const Profile = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const res = localStorage.getItem("user");
   const user: TUser = res ? JSON.parse(res) : null;
 
@@ -27,8 +31,9 @@ const Profile = () => {
     setEditedProfile({ ...editedProfile, causes_supported: causes });
   };
 
-  const handleSave = () => {
-    // Save logic here
+  const handleSave = async () => {
+    await dispatch(updateUserApi({ user: editedProfile, id: user.id }));
+
     setIsModalOpen(false);
   };
 
@@ -89,7 +94,7 @@ const Profile = () => {
 
       {/* Edit Profile Modal */}
       {isModalOpen && (
-        <div className="min-h-screen overflow-scroll fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-[60] p-5">
+        <div className="min-h-screen overflow-scroll fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-[60] md:z-0 p-5">
           <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-95 hover:scale-100">
             <h2 className="text-2xl font-bold primary-text mb-6 text-center">
               Edit Profile
