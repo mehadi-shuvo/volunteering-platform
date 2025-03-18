@@ -1,7 +1,7 @@
 import express from "express";
-import path from "path";
 import { userRouter } from "../modules/user/user.routes";
 import { volunteerEventsRouter } from "../modules/volunteer_events/volunteerEvents.routes";
+import { helpPostRouter } from "../modules/help_post/help_post.routes";
 
 const router = express.Router();
 
@@ -13,6 +13,10 @@ const moduleRoutes = [
   {
     path: "/volunteer-events",
     route: volunteerEventsRouter,
+  },
+  {
+    path: "/help-post",
+    route: helpPostRouter,
   },
 ];
 
