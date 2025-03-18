@@ -1,5 +1,3 @@
-import React from "react";
-
 const HelpPostModal = () => {
   return (
     <dialog id="help-post-modal" className="modal">

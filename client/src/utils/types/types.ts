@@ -50,6 +50,11 @@ export type TComment = {
   user: TUser;
 };
 
+export type TCommentPost = {
+  comment: string;
+  user_id: string;
+};
+
 export type THelpPost = {
   id: string;
   title: string;
