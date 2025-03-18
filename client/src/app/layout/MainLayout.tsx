@@ -102,7 +102,7 @@ const MainLayout = () => {
 
             {/* Help Post */}
             <Link
-              to={"/help-ost"}
+              to={"/help-post"}
               className="flex items-center gap-3 hover:bg-white/10 p-3 rounded-lg transition-all"
             >
               <svg
