@@ -43,3 +43,19 @@ export type TEvent = {
   attendees: TUser[];
   organizer_id: string;
 };
+
+export type TComment = {
+  id: string;
+  comment: string;
+  user: TUser;
+};
+
+export type THelpPost = {
+  id: string;
+  title: string;
+  description: string;
+  urgency_level: string;
+  posted_by: string;
+  user: TUser;
+  comments: TComment[];
+};

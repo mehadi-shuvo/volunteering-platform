@@ -22,7 +22,23 @@ const getHelpPosts = catchAsync(async (req, res) => {
   });
 });
 
+const addComment = catchAsync(async (req, res) => {
+  const post_id = req.params.id;
+  const { comment, user_id } = req.body;
+  const result = await helpPostServices.addComment({
+    comment,
+    user_id,
+    post_id,
+  });
+  res.status(201).json({
+    message: "Successfully added comment!",
+    success: true,
+    data: result,
+  });
+});
+
 export const helpPostControllers = {
   createHelpPost,
   getHelpPosts,
+  addComment,
 };

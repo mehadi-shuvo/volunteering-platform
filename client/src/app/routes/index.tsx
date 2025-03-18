@@ -6,6 +6,7 @@ import AuthLayout from "../layout/AuthLayout";
 import Registration from "../pages/auth/Registration";
 import Login from "../pages/auth/Login";
 import PrivateRoute from "../layout/PrivateRoute";
+import HelpPost from "../pages/help post/HelpPost";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <Events />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/help-post",
+        element: (
+          <PrivateRoute>
+            <HelpPost />
           </PrivateRoute>
         ),
       },
