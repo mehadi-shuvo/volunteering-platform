@@ -2,6 +2,7 @@ import { Link, Outlet } from "react-router";
 import { useDispatch } from "react-redux";
 import { logoutApi } from "../../apis/auth/logoutApi";
 import { AppDispatch } from "../../redux/store";
+import { Toaster } from "react-hot-toast";
 
 const MainLayout = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -11,6 +12,7 @@ const MainLayout = () => {
   };
   return (
     <div className="drawer lg:drawer-open">
+      <Toaster />
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Mobile Navbar */}

@@ -52,7 +52,7 @@ model History {
   id          String        @id @default(uuid())
   title       String
   type        VolunteerType
-  date        DateTime
+  date        String
   user_id     String
   user        User          @relation(fields: [user_id], references: [id])
   event_id    String
