@@ -33,7 +33,7 @@ export type LoginApiParams = {
 };
 
 export type TEvent = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   date: string;

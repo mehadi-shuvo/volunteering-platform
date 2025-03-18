@@ -1,8 +1,20 @@
+import toast from "react-hot-toast";
 import { TEvent } from "../utils/types/types";
+import { joinEventApi } from "../apis/event/joinEventApi";
 
-const EventCard = ({ event }: { event: TEvent }) => {
-  const handleJoinEvent = (id: string) => {
-    console.log({ join: id });
+const EventCard = ({ event, userId }: { event: TEvent; userId: string }) => {
+  const handleJoinEvent = async (id: string) => {
+    if (userId === event.organizer_id) {
+      toast.error("You already join this event as organizer!", {
+        style: {
+          background: "#212121",
+          color: "#fff",
+        },
+      });
+      return;
+    }
+
+    await joinEventApi({ eventId: id, userId });
   };
   return (
     <div
@@ -77,7 +89,7 @@ const EventCard = ({ event }: { event: TEvent }) => {
         </div>
       </div>
       <button
-        onClick={() => handleJoinEvent("dsdfdfdf")}
+        onClick={() => handleJoinEvent(event.id)}
         className="secondary-bg w-full py-2 rounded-lg text-white font-bold hover:bg-yellow-500 transition-all"
       >
         Join Event
