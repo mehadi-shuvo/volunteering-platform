@@ -20,7 +20,14 @@ const createHelpPost = async (payload: HelpPost) => {
 
 const getHelpPosts = async (): Promise<HelpPost[] | []> => {
   const result = await prismaC.helpPost.findMany({
-    include: { comments: true, user: true },
+    include: {
+      user: true,
+      comments: {
+        include: {
+          user: true,
+        },
+      },
+    },
   });
   return result;
 };
