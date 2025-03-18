@@ -13,6 +13,16 @@ const createHelpPost = catchAsync(async (req, res) => {
   });
 });
 
+const getHelpPosts = catchAsync(async (req, res) => {
+  const result = await helpPostServices.getHelpPosts();
+  res.status(200).json({
+    message: "Successfully fetched help post!",
+    success: true,
+    data: result,
+  });
+});
+
 export const helpPostControllers = {
   createHelpPost,
+  getHelpPosts,
 };
