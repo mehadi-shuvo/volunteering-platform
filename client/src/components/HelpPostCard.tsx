@@ -3,10 +3,8 @@ import { TComment, THelpPost, TUser } from "../utils/types/types";
 import CommentForm from "./CommentForm";
 import { addCommentApi } from "../apis/post/addCommentApi";
 
-const HelpPostCard = ({ post }: { post: THelpPost }) => {
+const HelpPostCard = ({ post, user }: { post: THelpPost; user: TUser }) => {
   const [AllComments, setAllComment] = useState<TComment[]>(post.comments);
-  const res = localStorage.getItem("user");
-  const user: TUser = res ? JSON.parse(res) : null;
   const handleCommentSubmit = async (commentText: string) => {
     try {
       const res = await addCommentApi({

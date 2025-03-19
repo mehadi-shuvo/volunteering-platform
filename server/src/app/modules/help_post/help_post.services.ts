@@ -1,5 +1,6 @@
 import { Comments, HelpPost } from "@prisma/client";
 import prismaC from "../../../utils/prismaClient";
+import { date } from "zod";
 
 const createHelpPost = async (payload: HelpPost) => {
   const user = await prismaC.user.findUnique({
@@ -15,7 +16,25 @@ const createHelpPost = async (payload: HelpPost) => {
     data: payload,
   });
 
-  return post;
+  if (!post) {
+    throw new Error("there have some issue to crete it!");
+  }
+
+  const result = await prismaC.helpPost.findUnique({
+    where: {
+      id: post.id,
+    },
+    include: {
+      user: true,
+      comments: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+
+  return result;
 };
 
 const getHelpPosts = async (): Promise<HelpPost[] | []> => {

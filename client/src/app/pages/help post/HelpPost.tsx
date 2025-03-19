@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import HelpPostModal from "../../../components/HelpPostModal";
 import HelpPostCard from "../../../components/HelpPostCard";
 import { getHelpPostApi } from "../../../apis/post/getHelpPostApi";
-import { THelpPost } from "../../../utils/types/types";
+import { THelpPost, TUser } from "../../../utils/types/types";
 
 const HelpPost = () => {
+  const res = localStorage.getItem("user");
+  const user: TUser = res ? JSON.parse(res) : null;
   const [helpPosts, setHelpPosts] = useState<THelpPost[]>([]);
 
   useEffect(() => {
@@ -47,13 +49,13 @@ const HelpPost = () => {
         {/* Help Post Listing */}
         <div className="space-y-6">
           {helpPosts.map((post) => (
-            <HelpPostCard key={post.id} post={post} />
+            <HelpPostCard key={post.id} post={post} user={user} />
           ))}
         </div>
       </div>
 
       {/* Modal for Creating a Post */}
-      <HelpPostModal />
+      <HelpPostModal userId={user.id} setHelpPosts={setHelpPosts} />
     </div>
   );
 };
