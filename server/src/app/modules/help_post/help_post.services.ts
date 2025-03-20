@@ -47,6 +47,9 @@ const getHelpPosts = async (): Promise<HelpPost[] | []> => {
         },
       },
     },
+    orderBy: {
+      created_at: "desc",
+    },
   });
   return result;
 };

@@ -45,9 +45,10 @@ const getAllEvents = async (filters: {
   const result = await prismaC.events.findMany({
     where,
     include: {
-      organizer: false, // Include organizer details
-      attendees: true, // Include attendees details
-      history: false, // Include event history
+      attendees: true,
+    },
+    orderBy: {
+      created_at: "desc",
     },
   });
   return result;
