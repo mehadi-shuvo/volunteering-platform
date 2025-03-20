@@ -1,6 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { createHelpPostApi } from "../apis/post/createHelpPostApi";
 import { THelpPost } from "../utils/types/types";
+import toast from "react-hot-toast";
 
 type HelpPostFormData = {
   title: string;
@@ -35,7 +36,13 @@ const HelpPostModal = ({
       const response = await createHelpPostApi(newPost);
 
       if (response) {
-        console.log("Post created successfully:", response);
+        toast.success("Post created successfully", {
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
         setHelpPosts((prevPosts: THelpPost[]) => [...prevPosts, response.data]);
         reset();
         (

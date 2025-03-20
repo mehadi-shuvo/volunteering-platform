@@ -15,6 +15,12 @@ const EventCard = ({ event, userId }: { event: TEvent; userId: string }) => {
     }
 
     await joinEventApi({ eventId: id, userId });
+    toast.success("Event joined successfully!", {
+      style: {
+        background: "#333",
+        color: "#fff",
+      },
+    });
   };
   return (
     <div

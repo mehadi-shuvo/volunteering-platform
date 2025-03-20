@@ -1,25 +1,28 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { registrationApi } from "../../../apis/auth/registrationApi";
+import { useNavigate } from "react-router";
 
-// Rename the interface to avoid conflict with the browser's FormData
 interface RegistrationFormData {
   email: string;
   name: string;
   password: string;
-  skills: string; // Optional field
-  causes_supported: string; // Optional field
+  skills: string;
+  causes_supported: string;
 }
 
 const Registration = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegistrationFormData>(); // Use the renamed interface
+  } = useForm<RegistrationFormData>();
 
-  // Use SubmitHandler<RegistrationFormData> to type the onSubmit function
-  const onSubmit: SubmitHandler<RegistrationFormData> = (data) => {
-    registrationApi(data);
+  const onSubmit: SubmitHandler<RegistrationFormData> = async (data) => {
+    const res = await registrationApi(data);
+    if (res) {
+      navigate("/auth/login");
+    }
   };
 
   return (

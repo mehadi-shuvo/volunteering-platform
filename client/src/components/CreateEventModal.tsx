@@ -1,6 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TEvent } from "../utils/types/types";
 import { createEventApi } from "../apis/event/createEventApi";
+import toast from "react-hot-toast";
 
 interface CreateEventModalProps {
   userId: string;
@@ -16,6 +17,12 @@ const CreateEventModal = ({ userId }: CreateEventModalProps) => {
   const onSubmit: SubmitHandler<TEvent> = async (data) => {
     data.organizer_id = userId;
     await createEventApi(data);
+    toast.success("Event created successfully !", {
+      style: {
+        background: "#333",
+        color: "#fff",
+      },
+    });
   };
 
   return (

@@ -3,6 +3,7 @@ import { TUser } from "../../../utils/types/types";
 import { updateUserApi } from "../../../apis/user/updateUserApi";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,7 +34,9 @@ const Profile = () => {
 
   const handleSave = async () => {
     await dispatch(updateUserApi({ user: editedProfile, id: user.id }));
-
+    toast.success("Profile updated successfully!", {
+      style: { borderRadius: "10px", background: "#333", color: "#fff" },
+    });
     setIsModalOpen(false);
   };
 

@@ -17,5 +17,5 @@ export const joinEventApi = async ({
     },
   });
 
-  console.log(res.data.data);
+  return res;
 };
