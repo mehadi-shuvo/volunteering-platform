@@ -1,20 +1,19 @@
-import axios from "axios";
-import { baseURL } from "../../utils/axiosInstance";
+import API from "../../utils/axiosInstance";
 
 interface Filters {
   category?: string;
   location?: string;
-  date?: string; // Use string for simplicity (ISO format)
+  date?: string;
 }
 
 export const getEventsApi = async (filters: Filters = {}) => {
   try {
-    const res = await axios.get(`${baseURL}/volunteer-events`, {
-      params: filters, // Pass filters as query parameters
+    const res = await API.get("/volunteer-events", {
+      params: filters,
+      withCredentials: true,
     });
-    console.log(res.data.data);
 
-    return res.data.data; // Return the fetched data
+    return res.data.data;
   } catch (error) {
     console.error("Error fetching events:", error);
     throw error;
