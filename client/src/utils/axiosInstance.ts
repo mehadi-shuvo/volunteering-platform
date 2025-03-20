@@ -1,6 +1,7 @@
 import axios from "axios";
 import { store } from "../redux/store";
-import { logout, setAccessToken } from "../redux/authSlice";
+import { setAccessToken } from "../redux/authSlice";
+import { logoutApi } from "../apis/auth/logoutApi";
 
 export const baseURL = "http://localhost:3000/api";
 
@@ -13,14 +14,14 @@ const API = axios.create({
 const refreshToken = async () => {
   try {
     const res = await axios.post(
-      "/api/auth/refresh",
+      "/api/auth/refresh-token",
       {},
       { withCredentials: true }
     );
     store.dispatch(setAccessToken(res.data.accessToken));
     return res.data.accessToken;
   } catch (err) {
-    store.dispatch(logout());
+    store.dispatch(logoutApi());
     throw err;
   }
 };
