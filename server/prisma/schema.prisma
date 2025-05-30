@@ -24,6 +24,11 @@ enum URGENCY_LEVELS{
   URGENT
 }
 
+enum TEAM_TYPE{
+  PUBLIC
+  PRIVATE
+}
+
 model User {
   id               String        @id @default(uuid())
   email            String        @unique
@@ -38,6 +43,7 @@ model User {
   help_post        HelpPost[]
   comments         Comments[]
   history          History[]     // History of events the user has participated in or organized
+  teams      UserTeam[]
 }
 
 model Events {
@@ -90,4 +96,26 @@ model Comments {
   post HelpPost @relation(fields: [post_id], references: [id])
   created_at  DateTime      @default(now())
 
+}
+
+model Teams{
+  id String @id @default(uuid())
+  name String
+  description String
+  type TEAM_TYPE
+  members     UserTeam[]  // Relation to join table
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+}
+
+model UserTeam {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  team      Teams    @relation(fields: [teamId], references: [id])
+  teamId    String
+  joined_at DateTime @default(now())
+  role      String   @default("MEMBER") // Optional: add role/position in team
+
+  @@unique([userId, teamId])
 }

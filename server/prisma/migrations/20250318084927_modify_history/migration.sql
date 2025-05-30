@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "History" ALTER COLUMN "date" SET DATA TYPE TEXT;
